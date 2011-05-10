@@ -100,16 +100,16 @@ static int redisSetTcpNoDelay(redisContext *c, int fd) {
 int redisContextConnectTcp(redisContext *c, const char *addr, int port) {
     int s;
     int blocking = (c->flags & REDIS_BLOCK);
-    struct sockaddr_in sa;
+    struct sockaddr_in6 sa;
 
-    if ((s = redisCreateSocket(c,AF_INET)) == REDIS_ERR)
+    if ((s = redisCreateSocket(c,AF_INET6)) == REDIS_ERR)
         return REDIS_ERR;
     if (!blocking && redisSetNonBlock(c,s) == REDIS_ERR)
         return REDIS_ERR;
 
-    sa.sin_family = AF_INET;
-    sa.sin_port = htons(port);
-    if (inet_aton(addr, &sa.sin_addr) == 0) {
+    sa.sin6_family = AF_INET6;
+    sa.sin6_port = htons(port);
+    if (inet_pton(AF_INET6, addr, &sa.sin6_addr) == 0) {
         struct hostent *he;
 
         he = gethostbyname(addr);
@@ -119,7 +119,7 @@ int redisContextConnectTcp(redisContext *c, const char *addr, int port) {
             close(s);
             return REDIS_ERR;
         }
-        memcpy(&sa.sin_addr, he->h_addr, sizeof(struct in_addr));
+        memcpy(&sa.sin6_addr, he->h_addr, sizeof(struct in6_addr));
     }
 
     if (connect(s, (struct sockaddr*)&sa, sizeof(sa)) == -1) {

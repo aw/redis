@@ -587,7 +587,7 @@ static void usage() {
 "redis-cli %s\n"
 "\n"
 "Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]\n"
-"  -h <hostname>    Server hostname (default: 127.0.0.1)\n"
+"  -h <hostname>    Server hostname (default: ::1)\n"
 "  -p <port>        Server port (default: 6379)\n"
 "  -s <socket>      Server socket (overrides hostname and port)\n"
 "  -a <password>    Password to use when connecting to the server\n"
@@ -697,7 +697,7 @@ static int noninteractive(int argc, char **argv) {
 int main(int argc, char **argv) {
     int firstarg;
 
-    config.hostip = sdsnew("127.0.0.1");
+    config.hostip = sdsnew("::1");
     config.hostport = 6379;
     config.hostsocket = NULL;
     config.repeat = 1;
