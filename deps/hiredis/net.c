@@ -80,7 +80,7 @@ static int redisCreateSocket(redisContext *c, int type) {
         __redisSetErrorFromErrno(c,REDIS_ERR_IO,NULL);
         return REDIS_ERR;
     }
-    if (type == AF_INET) {
+    if (type == AF_INET6) {
         if (redisSetReuseAddr(c,s) == REDIS_ERR) {
             return REDIS_ERR;
         }
@@ -212,7 +212,7 @@ int redisContextConnectTcp(redisContext *c, const char *addr, int port, struct t
 
     snprintf(_port, 6, "%d", port);
     memset(&hints,0,sizeof(hints));
-    hints.ai_family = AF_INET;
+    hints.ai_family = AF_INET6;
     hints.ai_socktype = SOCK_STREAM;
 
     if ((rv = getaddrinfo(addr,_port,&hints,&servinfo)) != 0) {
