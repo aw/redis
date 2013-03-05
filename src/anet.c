@@ -167,7 +167,6 @@ int anetResolve(char *err, char *host, char *ipbuf)
 {
     struct sockaddr_in6 sa;
 
-    sa.sin6_len = sizeof(sa);
     sa.sin6_family = AF_INET6;
     if (inet_pton(AF_INET6, host, &sa.sin6_addr) == 0) {
         struct hostent *he;
@@ -179,7 +178,7 @@ int anetResolve(char *err, char *host, char *ipbuf)
         }
         memcpy(&sa.sin6_addr, he->h_addr, sizeof(struct in6_addr));
     }
-    strcpy(ipbuf,inet_ntop(AF_INET6, &sa.sin6_addr, host, sa.sin6_len));
+    strcpy(ipbuf,inet_ntop(AF_INET6, &sa.sin6_addr, host, sizeof(sa)));
     return ANET_OK;
 }
 
