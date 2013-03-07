@@ -391,11 +391,13 @@ static int anetGenericAccept(char *err, int s, struct sockaddr *sa, socklen_t *l
 int anetTcpAccept(char *err, int s, char *ip, int *port) {
     int fd;
     struct sockaddr_in6 sa;
-    socklen_t salen = sizeof(sa);
-    if ((fd = anetGenericAccept(err,s,(struct sockaddr*)&sa,&salen)) == ANET_ERR)
+    struct sockaddr_storage addr;
+    char straddr[INET6_ADDRSTRLEN];
+    socklen_t salen = sizeof(addr);
+    if ((fd = anetGenericAccept(err,s,(struct sockaddr*)&addr,&salen)) == ANET_ERR)
         return ANET_ERR;
 
-    if (ip) strcpy(ip,inet_ntop(AF_INET6, &sa.sin6_addr, ip, sizeof(ip)));
+    if (ip) strcpy(ip,inet_ntop(AF_INET6, &sa.sin6_addr, straddr, sizeof(straddr)));
     if (port) *port = ntohs(sa.sin6_port);
     return fd;
 }
